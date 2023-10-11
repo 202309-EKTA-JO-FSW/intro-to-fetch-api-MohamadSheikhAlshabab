@@ -1,27 +1,23 @@
 const fetchUserData = async () =>{
     try{
-        const arrOfRes = [];
         const usersData = await fetch("https://jsonplaceholder.typicode.com/users");
         const data = await usersData.json();
-        const result = await data.map( user => {
+        const result = data.map( user => {
             const {name, username, email, phone, website} = user;
             const address = user.address.street
             const company = user.company.name;
-            arrOfRes.push(name,username, email, address, phone, website, company);
+            return {name,username, email, address, phone, website, company};
         })
-        console.table(arrOfRes);
+        console.table(result);
 
-        const arrOfBizEmail = [];
         const filterData = data.filter( user => {
-            const filteredEmail = user.email.split('.');
-            filteredEmail.includes('biz') ? arrOfBizEmail.push(user.email) : null;
-        })
-        console.table(arrOfBizEmail);
+            const filteredEmail = user.email.includes('.biz');
+            return filteredEmail;
+        });
+        console.table(filterData);
 
-        const arrOfsortedUser = [];
-        const sortedUser = data.map( user => arrOfsortedUser.push(user.name));
-
-        console.log(arrOfsortedUser.sort())
+        const sortedUser = data.map( user => user.name).sort();
+        console.table(sortedUser);
 
     }catch (err){
         console.error(err);
